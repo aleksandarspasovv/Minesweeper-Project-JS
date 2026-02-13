@@ -1,6 +1,6 @@
 // Logic
 
-const TILE_STATUSES = {
+export const TILE_STATUSES = {
     HIDDEN: 'hidden',
     MINE: 'mine',
     NUMBER: 'number',
@@ -70,4 +70,38 @@ function randomNumber(size){
 
 function positionMatch(a, b){
     return a.x === b.x && a.y === b.y
+}
+
+export function revealTile(board, tile){
+    if(tile.status !== TILE_STATUSES.HIDDEN){
+        return
+    }
+
+    if(tile.mine){
+        tile.status = TILE_STATUSES.MINE
+        return
+    }
+
+    tile.status = TILE_STATUSES.NUMBER
+    const adjacentTiles = nearbyTiles(board, tile)
+    const mines = adjacentTiles.filter(t => t.mine)
+    if(mines.length === 0){
+
+    } else {
+        tile.element.textContent = mines.length
+    }
+
+}
+
+function nearbyTiles(board, { x, y }){
+    const tiles = []
+
+    for(let xOffset = -1; xOffset <= 1; xOffset ++){
+        for(let yOffset = -1; yOffset <= 1; yOffset ++){
+            const tile = board[x + xOffset]?.[y + yOffset]
+            if(tile) tiles.push(tile)
+        }
+    }
+
+    return tiles
 }
